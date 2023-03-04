@@ -1,5 +1,10 @@
+import 'dart:ui';
+
+import 'package:shopapp/helper/extensions.dart';
+
 class Product {
-  String? name, image, description, color, size, price;
+  String? name, image, description,  size, price,productId;
+  Color? color;
 
   Product({
     this.name,
@@ -8,6 +13,7 @@ class Product {
     this.color,
     this.size,
     this.price,
+    this.productId,
   });
 
   Product.fromJson(Map<dynamic, dynamic> map) {
@@ -18,9 +24,10 @@ class Product {
     name = map["name"];
     image = map["image"];
     description = map["description"];
-    color = map["color"];
+    color = HexColor.fromHex(map["color"]);
     size = map["size"];
     price = map["price"];
+    productId = map["productId"];
   }
 
   toJson() {
@@ -31,6 +38,7 @@ class Product {
       'color': color,
       'size': size,
       'price': price,
+      'productId': productId,
     };
   }
 }

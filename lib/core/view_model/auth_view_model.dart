@@ -3,13 +3,17 @@ import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shopapp/core/services/firestore_user.dart';
+import 'package:shopapp/helper/local_storage_data.dart';
 import 'package:shopapp/models/user.dart';
+import 'package:shopapp/views/control_view.dart';
 import 'package:shopapp/views/home_view.dart';
 
 class AuthViewModel extends GetxController {
   GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
   FirebaseAuth _auth = FirebaseAuth.instance;
   FacebookLogin _facebookLogin = FacebookLogin();
+
+  final LocalStorageData localStorageData = Get.find();
 
   late String email = '', password = '', name = '';
 
@@ -41,7 +45,7 @@ class AuthViewModel extends GetxController {
     final authCredential = GoogleAuthProvider.credential(
         idToken: authentication.idToken,
         accessToken: authentication.accessToken);
-    await _auth.signInWithCredential(authCredential).then((user) async{
+    await _auth.signInWithCredential(authCredential).then((user) async {
       await saveUserToFireStoreDb(user);
       Get.offAll(HomeView());
     });
@@ -61,8 +65,15 @@ class AuthViewModel extends GetxController {
 
   void signInWithEmailAndPassword() async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-      Get.offAll(() => HomeView());
+      await _auth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((user) async {
+        await FireStoreUser().getCurrentUser(user.user!.uid).then((value) => {
+              setUserToSharedPreference(
+                  UserModel.fromJson(value.data() as Map<dynamic, dynamic>))
+            });
+      });
+      Get.offAll(() => ControlView());
     } catch (e) {
       Get.snackbar("Login Error", e.toString(),
           snackPosition: SnackPosition.BOTTOM);
@@ -76,7 +87,7 @@ class AuthViewModel extends GetxController {
           .then((user) async {
         await saveUserToFireStoreDb(user);
       });
-      Get.offAll(() => HomeView());
+      Get.offAll(() => ControlView());
     } catch (e) {
       Get.snackbar("Register Error", e.toString(),
           snackPosition: SnackPosition.BOTTOM);
@@ -90,7 +101,12 @@ class AuthViewModel extends GetxController {
       email: user.user?.email,
       imageUrl: user.user?.photoURL,
     );
-    print(userModel);
+
     await FireStoreUser().addUserToDB(userModel);
+    await setUserToSharedPreference(userModel);
+  }
+
+  Future<void> setUserToSharedPreference(UserModel userModel) async {
+    await localStorageData.setUser(userModel);
   }
 }

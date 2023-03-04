@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:shopapp/core/view_model/auth_view_model.dart';
+import 'package:shopapp/core/view_model/cart_view_model.dart';
 import 'package:shopapp/core/view_model/home_view_model.dart';
+import 'package:shopapp/helper/local_storage_data.dart';
 import '../core/view_model/control_view_model.dart';
 
 class Binding extends Bindings {
@@ -8,6 +10,9 @@ class Binding extends Bindings {
   void dependencies() {
     Get.lazyPut(() => AuthViewModel());
     Get.lazyPut(() => ControlViewModel());
-    Get.lazyPut(() => HomeViewModel());
+    Get.lazyPut<HomeViewModel>(() => HomeViewModel());
+    Get.lazyPut(() => CartViewModel());
+    Get.lazyPut(() => LocalStorageData());
+
   }
 }

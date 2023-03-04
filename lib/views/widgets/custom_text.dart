@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class CustomText extends StatelessWidget {
   final String text;
   final double fontSize;
+  final double height;
   final Color color;
   final Alignment alignment;
 
@@ -11,7 +12,8 @@ class CustomText extends StatelessWidget {
     required this.text,
     this.fontSize = 16,
     this.color = Colors.black,
-    this.alignment = Alignment.topLeft
+    this.alignment = Alignment.topLeft,
+    this.height = 1
   });
 
   @override
@@ -21,6 +23,7 @@ class CustomText extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
+          height: height,
           fontSize: fontSize,
           color: color,
         ),

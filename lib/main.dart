@@ -5,25 +5,29 @@ import 'package:get/get.dart';
 import 'package:shopapp/views/auth/login_screen.dart';
 import 'package:shopapp/views/control_view.dart';
 
+import 'core/view_model/cart_view_model.dart';
 import 'helper/binding.dart';
 
 void main() async{
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  Get.put(CartViewModel());
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+
       debugShowCheckedModeBanner: false,
       initialBinding: Binding(),
       title: 'Flutter Demo',
       theme: ThemeData(
+        fontFamily: 'SourceSansPro',
         primarySwatch: Colors.blue,
       ),
       home: ControlView(),

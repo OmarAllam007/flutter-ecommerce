@@ -15,17 +15,18 @@ class ControlView extends GetWidget<AuthViewModel> {
       return (Get.find<AuthViewModel>().user == null)
           ? LoginScreen()
           : GetBuilder<ControlViewModel>(
-            builder:(controller) => Scaffold(
+              init: ControlViewModel(),
+              builder: (controller) => Scaffold(
                 body: controller.currentScreen,
                 bottomNavigationBar: _buildBottomNavBar(),
               ),
-          );
+            );
     });
   }
 
   Widget _buildBottomNavBar() {
     return GetBuilder<ControlViewModel>(
-      init: ControlViewModel(),
+      init: Get.find<ControlViewModel>(),
       builder: (controller) => BottomNavigationBar(
         elevation: 0,
         selectedItemColor: Colors.black,
@@ -34,7 +35,9 @@ class ControlView extends GetWidget<AuthViewModel> {
           BottomNavigationBarItem(
             activeIcon: Padding(
               padding: const EdgeInsets.only(top: 20.0),
-              child: Text("Explore",),
+              child: Text(
+                "Explore",
+              ),
             ),
             label: "",
             icon: Padding(
